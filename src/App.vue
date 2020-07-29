@@ -1,18 +1,27 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/Logo-5HD.png">
-    <HelloWorld msg="Welcome to Your Inbox #4 - juin 2020  🎯 20k & Remote Business"/>
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+      <img alt="Vue logo" src="./assets/Logo-5HD.png">
+      <div class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a href="/stories" class="nav-link">Stories</a>
+        </li>
+        <li class="nav-item">
+          <a href="/add" class="nav-link">Add</a>
+        </li>
+      </div>
+    </nav>
+
+    <div class="container mt-3">
+      <router-view />
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
 }
 </script>
 
