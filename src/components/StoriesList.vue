@@ -6,7 +6,7 @@
           v-model="title"/>
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" type="button"
-            @click="searchTitle"
+            @click="findByTitle(title)"
           >
             Search
           </button>
@@ -83,20 +83,10 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchStories"]),
-    retrieveStories() {
-      StoryDataService.getAll()
-        .then(response => {
-          this.stories = response.data;
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    },
+    ...mapActions(["fetchStories", "findByTitle"]),
 
     refreshList() {
-      this.retrieveStories();
+      this.fetchStories();
       this.currentStory = null;
       this.currentIndex = -1;
     },
@@ -118,20 +108,20 @@ export default {
         });
     },
     
-    searchTitle() {
-      StoryDataService.findByTitle(this.title)
-        .then(response => {
-          this.stories = response.data;
-          console.log("findByTitle",response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    }
+    // searchTitle() {
+    //   StoryDataService.findByTitle(this.title)
+    //     .then(response => {
+    //       this.stories = response.data;
+    //       console.log("findByTitle",response.data);
+    //     })
+    //     .catch(e => {
+    //       console.log(e);
+    //     });
+    // }
   },
   computed: mapGetters(["allStories"]),
   mounted() {
-    this.retrieveStories();
+    // this.retrieveStories();
   },
   created() {
     this.fetchStories();
