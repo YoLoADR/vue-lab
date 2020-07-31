@@ -25,6 +25,17 @@
           {{ story.title }}
         </li>
       </ul>
+      <h4>Stories List Vuex</h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          :class="{ active: index == currentIndex }"
+          v-for="(story, index) in allStories"
+          :key="index"
+          @click="setActiveStory(story, index)"
+        >
+          {{ story.title }}
+        </li>
+      </ul>
 
       <button class="m-3 btn btn-sm btn-danger" @click="removeAllStories">
         Remove All
@@ -59,6 +70,7 @@
 
 <script>
 import StoryDataService from "../services/StoryDataService";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "stories-list",
@@ -71,6 +83,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["fetchStories"]),
     retrieveStories() {
       StoryDataService.getAll()
         .then(response => {
@@ -116,8 +129,12 @@ export default {
         });
     }
   },
+  computed: mapGetters(["allStories"]),
   mounted() {
     this.retrieveStories();
+  },
+  created() {
+    this.fetchStories();
   }
 };
 </script>
