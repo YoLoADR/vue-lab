@@ -107,22 +107,8 @@ export default {
           console.log(e);
         });
     },
-    
-    // searchTitle() {
-    //   StoryDataService.findByTitle(this.title)
-    //     .then(response => {
-    //       this.stories = response.data;
-    //       console.log("findByTitle",response.data);
-    //     })
-    //     .catch(e => {
-    //       console.log(e);
-    //     });
-    // }
   },
   computed: mapGetters(["allStories"]),
-  mounted() {
-    // this.retrieveStories();
-  },
   created() {
     this.fetchStories();
   }
