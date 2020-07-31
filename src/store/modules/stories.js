@@ -25,10 +25,21 @@ const actions = {
     const response = await http.get(`/user-story?title=${title}`);
     commit("searchStoryByTitle", response.data);
   },
+  async addStory({ commit }, data) {
+    const response = await http.post("/user-story", data);
+    commit("newStory", response.data);
+  },
+  async deleteStory({ commit }, _id) {
+    await http.delete(`/user-story/${_id}`);
+    commit("removeStory", _id);
+  },
 };
 const mutations = {
   setStories: (state, stories) => (state.stories = stories),
   setStory: (state, story) => (state.story = story),
   searchStoryByTitle: (state, stories) => (state.stories = stories),
+  newStory: (state, story) => state.stories.unshift(story),
+  removeStory: (state, _id) =>
+    (state.stories = state.stories.filter(story => story._id !== _id)),
 };
 export default { state, getters, actions, mutations };

@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import StoryDataService from "../services/StoryDataService";
 
+import { mapActions } from "vuex";
 export default {
   name: "add-story",
   data() {
@@ -51,21 +51,15 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["addStory"]),
     saveStory() {
       var data = {
         title: this.story.title,
         description: this.story.description
       };
 
-      StoryDataService.create(data)
-        .then(response => {
-          this.story.id = response.data.id;
-          console.log(response.data);
-          this.submitted = true;
-        })
-        .catch(e => {
-          console.log(e);
-        });
+      this.addStory(data);
+      this.submitted = true;
     },
     
     newStory() {

@@ -34,7 +34,7 @@
     </button>
 
     <button class="badge badge-danger mr-2"
-      @click="deleteStory"
+      @click="removeStory"
     >
       Delete
     </button>
@@ -55,6 +55,7 @@
 
 <script>
 import StoryDataService from "../services/StoryDataService";
+import { mapActions } from "vuex";
 
 export default {
   name: "story",
@@ -65,6 +66,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["deleteStory"]),
     getStory(id) {
       console.log("id", id);
       StoryDataService.get(id)
@@ -108,15 +110,9 @@ export default {
         });
     },
 
-    deleteStory() {
-      StoryDataService.delete(this.currentStory._id)
-        .then(response => {
-          console.log(response.data);
-          this.$router.push({ name: "stories" });
-        })
-        .catch(e => {
-          console.log(e);
-        });
+    removeStory() {
+      this.deleteStory(this.currentStory._id)
+      this.$router.push({ name: "stories" });
     }
   },
   mounted() {
