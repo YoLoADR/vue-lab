@@ -14,17 +14,6 @@
       </div>
     </div>
     <div class="col-md-6">
-      <h4>Stories List</h4>
-      <ul class="list-group">
-        <li class="list-group-item"
-          :class="{ active: index == currentIndex }"
-          v-for="(story, index) in stories"
-          :key="index"
-          @click="setActiveStory(story, index)"
-        >
-          {{ story.title }}
-        </li>
-      </ul>
       <h4>Stories List Vuex</h4>
       <ul class="list-group">
         <li class="list-group-item"
@@ -51,7 +40,7 @@
           <label><strong>Description:</strong></label> {{ currentStory.description }}
         </div>
         <div>
-          <label><strong>Status:</strong></label> {{ currentStory.published ? "Published" : "Pending" }}
+          <label><strong>Status:</strong></label> {{ currentStory.completed ? "Published" : "Pending" }}
         </div>
 
         <a class="badge badge-warning"

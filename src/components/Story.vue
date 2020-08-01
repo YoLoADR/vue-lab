@@ -40,7 +40,7 @@
     </button>
 
     <button type="submit" class="badge badge-success"
-      @click="updateStory"
+      @click="updateSelectedStory"
     >
       Update
     </button>
@@ -55,7 +55,7 @@
 
 <script>
 import StoryDataService from "../services/StoryDataService";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "story",
@@ -66,9 +66,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["deleteStory"]),
+    ...mapActions(["deleteStory", "updateStory", "fetchStory"]),
     getStory(id) {
+      // TODO --> n'arrive pas à recupérer l'objet en cours via VUEX pattern
       console.log("id", id);
+      // this.fetchStory(id)
+      // this.currentStory = this.selectedStory;
+      //
       StoryDataService.get(id)
         .then(response => {
           this.currentStory = response.data;
@@ -80,34 +84,13 @@ export default {
     },
 
     updateCompleted(status) {
-      var data = {
-        title: this.currentStory.title,
-        description: this.currentStory.description,
-        completed: status
-      };
-
-      StoryDataService.update(this.currentStory._id, data)
-        .then(response => {
-          this.currentStory.completed = status;
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
+      this.currentStory.completed = status;
+      this.updateStory(this.currentStory);
     },
 
-    updateStory() {
-      var {title, description , completed} = this.currentStory;
-      StoryDataService.update(this.currentStory._id, {
-        title, description, completed
-      })
-        .then(response => {
-          console.log(response.data);
-          this.message = 'The story was updated successfully!';
-        })
-        .catch(e => {
-          console.log(e);
-        });
+    updateSelectedStory() {
+      this.updateStory(this.currentStory);
+      this.$router.push({ name: "stories" });
     },
 
     removeStory() {
@@ -115,6 +98,7 @@ export default {
       this.$router.push({ name: "stories" });
     }
   },
+  computed: mapGetters(["selectedStory"]),
   mounted() {
     this.message = '';
     this.getStory(this.$route.params.id);

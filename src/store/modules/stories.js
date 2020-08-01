@@ -2,15 +2,11 @@ import http from "../../http-common";
 
 const state = {
   stories: [],
-  story : {
-    id: null,
-    title: "",
-    description: "",
-    completed: false
-  }
+  story : {}
 };
 const getters = {
   allStories: state => state.stories,
+  selectedStory: state => state.story
 };
 const actions = {
   async fetchStories({ commit }) {
@@ -20,6 +16,7 @@ const actions = {
   async fetchStory({ commit }, _id) {
     const response = await http.get(`/user-story/${_id}`);
     commit("setStory", response.data);
+    console.log("setStory", response.data);
   },
   async findByTitle({ commit }, title) {
     const response = await http.get(`/user-story?title=${title}`);
@@ -33,12 +30,29 @@ const actions = {
     await http.delete(`/user-story/${_id}`);
     commit("removeStory", _id);
   },
+  async updateStory({ commit }, updStory) {
+    var data = {
+        title: updStory.title,
+        description: updStory.description,
+        completed: updStory.completed
+      };
+    const response = await http.patch(`/user-story/${updStory._id}`, data);
+    commit("updateStory", response.data);
+  }
 };
 const mutations = {
   setStories: (state, stories) => (state.stories = stories),
-  setStory: (state, story) => (state.story = story),
+  setStory: (state, story) => {
+      console.log("story mutation", story)
+      return state.story = story},
   searchStoryByTitle: (state, stories) => (state.stories = stories),
   newStory: (state, story) => state.stories.unshift(story),
+  updateStory: (state, updStory) => {
+    const index = state.stories.findIndex(story => story._id == updStory._id);
+    if (index !== -1) {
+      state.stories.splice(index, 1, updStory);
+    }
+  },
   removeStory: (state, _id) =>
     (state.stories = state.stories.filter(story => story._id !== _id)),
 };
