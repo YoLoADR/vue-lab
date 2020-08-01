@@ -1,28 +1,28 @@
 <template>
-  <div v-if="currentStory" class="edit-form">
+  <div v-if="selectedStory" class="edit-form">
     <h4>Story</h4>
     <form>
       <div class="form-group">
         <label for="title">Title</label>
         <input type="text" class="form-control" id="title"
-          v-model="currentStory.title"
+          v-model="selectedStory.title"
         />
       </div>
       <div class="form-group">
         <label for="description">Description</label>
         <input type="text" class="form-control" id="description"
-          v-model="currentStory.description"
+          v-model="selectedStory.description"
         />
       </div>
 
       <div class="form-group">
         <label><strong>Status:</strong></label>
-        {{ currentStory.completed ? "Completed" : "Pending" }}
+        {{ selectedStory.completed ? "Completed" : "Pending" }}
       </div>
     </form>
 
     <button class="badge badge-primary mr-2"
-      v-if="currentStory.completed"
+      v-if="selectedStory.completed"
       @click="updateCompleted(false)"
     >
       UnPublish
@@ -66,30 +66,18 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["deleteStory", "updateStory", "fetchStory"]),
+    ...mapActions(["deleteStory", "updateStory","fetchStory"]),
     getStory(id) {
-      // TODO --> n'arrive pas à recupérer l'objet en cours via VUEX pattern
-      console.log("id", id);
-      // this.fetchStory(id)
-      // this.currentStory = this.selectedStory;
-      //
-      StoryDataService.get(id)
-        .then(response => {
-          this.currentStory = response.data;
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
+      this.fetchStory(id);
     },
 
     updateCompleted(status) {
-      this.currentStory.completed = status;
-      this.updateStory(this.currentStory);
+      this.selectedStory.completed = status;
+      this.updateStory(this.selectedStory);
     },
 
     updateSelectedStory() {
-      this.updateStory(this.currentStory);
+      this.updateStory(this.selectedStory);
       this.$router.push({ name: "stories" });
     },
 

@@ -2,7 +2,7 @@ import http from "../../http-common";
 
 const state = {
   stories: [],
-  story : {}
+  story : null
 };
 const getters = {
   allStories: state => state.stories,
@@ -16,7 +16,6 @@ const actions = {
   async fetchStory({ commit }, _id) {
     const response = await http.get(`/user-story/${_id}`);
     commit("setStory", response.data);
-    console.log("setStory", response.data);
   },
   async findByTitle({ commit }, title) {
     const response = await http.get(`/user-story?title=${title}`);
@@ -42,9 +41,7 @@ const actions = {
 };
 const mutations = {
   setStories: (state, stories) => (state.stories = stories),
-  setStory: (state, story) => {
-      console.log("story mutation", story)
-      return state.story = story},
+  setStory: (state, story) => state.story = story,
   searchStoryByTitle: (state, stories) => (state.stories = stories),
   newStory: (state, story) => state.stories.unshift(story),
   updateStory: (state, updStory) => {
