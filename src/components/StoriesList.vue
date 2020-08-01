@@ -6,7 +6,7 @@
           v-model="title"/>
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" type="button"
-            @click="searchTitle"
+            @click="findByTitle(title)"
           >
             Search
           </button>
@@ -14,11 +14,11 @@
       </div>
     </div>
     <div class="col-md-6">
-      <h4>Stories List</h4>
+      <h4>Stories List Vuex</h4>
       <ul class="list-group">
         <li class="list-group-item"
           :class="{ active: index == currentIndex }"
-          v-for="(story, index) in stories"
+          v-for="(story, index) in allStories"
           :key="index"
           @click="setActiveStory(story, index)"
         >
@@ -40,7 +40,7 @@
           <label><strong>Description:</strong></label> {{ currentStory.description }}
         </div>
         <div>
-          <label><strong>Status:</strong></label> {{ currentStory.published ? "Published" : "Pending" }}
+          <label><strong>Status:</strong></label> {{ currentStory.completed ? "Published" : "Pending" }}
         </div>
 
         <a class="badge badge-warning"
@@ -59,6 +59,7 @@
 
 <script>
 import StoryDataService from "../services/StoryDataService";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "stories-list",
@@ -71,19 +72,10 @@ export default {
     };
   },
   methods: {
-    retrieveStories() {
-      StoryDataService.getAll()
-        .then(response => {
-          this.stories = response.data;
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    },
+    ...mapActions(["fetchStories", "findByTitle"]),
 
     refreshList() {
-      this.retrieveStories();
+      this.fetchStories();
       this.currentStory = null;
       this.currentIndex = -1;
     },
@@ -104,20 +96,10 @@ export default {
           console.log(e);
         });
     },
-    
-    searchTitle() {
-      StoryDataService.findByTitle(this.title)
-        .then(response => {
-          this.stories = response.data;
-          console.log("findByTitle",response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    }
   },
-  mounted() {
-    this.retrieveStories();
+  computed: mapGetters(["allStories"]),
+  created() {
+    this.fetchStories();
   }
 };
 </script>
