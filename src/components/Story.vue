@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import StoryDataService from "../services/StoryDataService";
+
 import { mapActions, mapGetters } from "vuex";
 
 export default {
