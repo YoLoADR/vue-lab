@@ -52,13 +52,14 @@ export default {
   },
   methods: {
     ...mapActions(["addStory"]),
-    saveStory() {
-      var data = {
+    async saveStory() {
+      const token = await this.$auth.getTokenSilently();
+      var payload = {
         title: this.story.title,
-        description: this.story.description
+        description: this.story.description,
+        token
       };
-
-      this.addStory(data);
+      this.addStory(payload);
       this.submitted = true;
     },
     

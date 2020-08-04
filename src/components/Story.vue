@@ -62,27 +62,42 @@ export default {
   data() {
     return {
       currentStory: null,
-      message: ''
+      message: '',
     };
   },
   methods: {
     ...mapActions(["deleteStory", "updateStory","fetchStory"]),
-    getStory(id) {
-      this.fetchStory(id);
+    async getStory(_id) {
+      const token = await this.$auth.getTokenSilently();
+      let payload = {
+        token,
+        _id
+      }
+      this.fetchStory(payload);
     },
 
-    updateCompleted(status) {
+    async updateCompleted(status) {
+      const token = await this.$auth.getTokenSilently();
       this.selectedStory.completed = status;
+      this.selectedStory.token = token;
       this.updateStory(this.selectedStory);
     },
 
-    updateSelectedStory() {
+   async updateSelectedStory() {
+      this.selectedStory.token = await this.$auth.getTokenSilently();
       this.updateStory(this.selectedStory);
       this.$router.push({ name: "stories" });
     },
+  
 
-    removeStory() {
-      this.deleteStory(this.currentStory._id)
+   async removeStory() {
+      console.log("this.currentStory._id",this.$route.params.id);
+      const token = await this.$auth.getTokenSilently();
+      var data = {
+        _id: this.$route.params.id,
+        token
+      };
+      this.deleteStory(data)
       this.$router.push({ name: "stories" });
     }
   },

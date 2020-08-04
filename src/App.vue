@@ -9,10 +9,16 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item active">
-                <a href="/stories" class="nav-link">Stories</a>
+                <a href="/" class="nav-link">Home</a>
               </li>
               <li class="nav-item">
-                <a href="/add" class="nav-link">Add</a>
+                <router-link class="nav-link" v-if="$auth.isAuthenticated" to="/stories">Stories</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" v-if="$auth.isAuthenticated" to="/add">Add</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" v-if="$auth.isAuthenticated" to="/profile">Profile</router-link>
               </li>
             </ul>
           </div>
@@ -26,9 +32,6 @@
 
 <script>
 
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'jquery/src/jquery.js'
-import 'bootstrap/dist/js/bootstrap.min.js'
 
 export default {
   name: 'App',

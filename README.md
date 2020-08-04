@@ -8,8 +8,9 @@ yarn install
 ### Compiles and hot-reloads for development
 ```
 yarn serve
+OR
+npm run serve -- --port 3000
 ```
-
 ### Compiles and minifies for production
 ```
 yarn build

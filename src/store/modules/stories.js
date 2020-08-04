@@ -2,32 +2,57 @@ import http from "../../http-common";
 
 const state = {
   stories: [],
-  story : null
+  story : null,
+  token: ""
 };
 const getters = {
   allStories: state => state.stories,
   selectedStory: state => state.story
 };
 const actions = {
-  async fetchStories({ commit }) {
-    const response = await http.get("/user-story");
+  async fetchStories({ commit }, token) {
+    const response = await http.get("/user-story", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    state.token = token;
     commit("setStories", response.data);
   },
-  async fetchStory({ commit }, _id) {
-    const response = await http.get(`/user-story/${_id}`);
+  async fetchStory({ commit }, payload) {
+    const response = await http.get(`/user-story/${payload._id}`, {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${payload.token}`
+      }
+    });
     commit("setStory", response.data);
   },
   async findByTitle({ commit }, title) {
-    const response = await http.get(`/user-story?title=${title}`);
+    const response = await http.get(`/user-story?title=${title}`, {
+      headers: {
+        Authorization: `Bearer ${state.token}`
+      }
+    });
     commit("searchStoryByTitle", response.data);
   },
-  async addStory({ commit }, data) {
-    const response = await http.post("/user-story", data);
+  async addStory({ commit }, payload) {
+    const data = {description : payload.description, title: payload.title}
+    const response = await http.post("/user-story", data, {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${payload.token}`
+      }
+    });
     commit("newStory", response.data);
   },
-  async deleteStory({ commit }, _id) {
-    await http.delete(`/user-story/${_id}`);
-    commit("removeStory", _id);
+  async deleteStory({ commit }, payload) {
+    await http.delete(`/user-story/${payload._id}`, {
+      headers: {
+        Authorization: `Bearer ${payload.token}`
+      }
+    });
+    commit("removeStory", payload.id);
   },
   async updateStory({ commit }, updStory) {
     var data = {
@@ -35,11 +60,21 @@ const actions = {
         description: updStory.description,
         completed: updStory.completed
       };
-    const response = await http.patch(`/user-story/${updStory._id}`, data);
+      
+    const response = await http.patch(`/user-story/${updStory._id}`, data, {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${updStory.token}`
+      }
+    });
     commit("updateStory", response.data);
   },
-  async deleteStories({ commit }) {
-    await http.delete(`/user-story`);
+  async deleteStories({ commit }, token) {
+    await http.delete(`/user-story`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     commit("removeStories", []);
   },
 };
@@ -57,5 +92,6 @@ const mutations = {
   removeStory: (state, _id) =>
     (state.stories = state.stories.filter(story => story._id !== _id)),
   removeStories: (state, stories) => (state.stories = stories),
+  setToken: (state, newToken) => (state.token = newToken),
 };
 export default { state, getters, actions, mutations };
