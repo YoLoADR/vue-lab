@@ -58,7 +58,6 @@
 </template>
 
 <script>
-import StoryDataService from "../services/StoryDataService";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -72,7 +71,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchStories", "findByTitle"]),
+    ...mapActions(["fetchStories", "findByTitle", "deleteStories"]),
 
     refreshList() {
       this.fetchStories();
@@ -87,14 +86,8 @@ export default {
     },
 
     removeAllStories() {
-      StoryDataService.deleteAll()
-        .then(response => {
-          console.log(response.data);
-          this.refreshList();
-        })
-        .catch(e => {
-          console.log(e);
-        });
+      this.deleteStories();
+      this.refreshList();
     },
   },
   computed: mapGetters(["allStories"]),
