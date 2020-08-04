@@ -37,7 +37,11 @@ const actions = {
       };
     const response = await http.patch(`/user-story/${updStory._id}`, data);
     commit("updateStory", response.data);
-  }
+  },
+  async deleteStories({ commit }) {
+    await http.delete(`/user-story`);
+    commit("removeStories", []);
+  },
 };
 const mutations = {
   setStories: (state, stories) => (state.stories = stories),
@@ -52,5 +56,6 @@ const mutations = {
   },
   removeStory: (state, _id) =>
     (state.stories = state.stories.filter(story => story._id !== _id)),
+  removeStories: (state, stories) => (state.stories = stories),
 };
 export default { state, getters, actions, mutations };
