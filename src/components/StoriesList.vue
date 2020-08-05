@@ -68,18 +68,20 @@ export default {
       currentStory: null,
       currentIndex: -1,
       title: "",
+      token: "",
     };
   },
   methods: {
     ...mapActions(["fetchStories", "findByTitle", "deleteStories"]),
-
+    async getToken() {
+      return await this.$auth.getTokenSilently();
+    },
     async setStories(){
-      const token = await this.$auth.getTokenSilently();
-      this.fetchStories(token);
+      this.token = await this.getToken();
+      this.fetchStories(this.token);
     },
     async refreshList() {
-      const token = await this.$auth.getTokenSilently();
-      this.fetchStories(token);
+      this.fetchStories(this.token);
       this.currentStory = null;
       this.currentIndex = -1;
     },
@@ -90,8 +92,7 @@ export default {
     },
 
     async removeAllStories() {
-      const token = await this.$auth.getTokenSilently();
-      this.deleteStories(token);
+      this.deleteStories(this.token);
       this.refreshList();
     },
   },
