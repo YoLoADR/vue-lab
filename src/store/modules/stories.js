@@ -37,7 +37,8 @@ const actions = {
     commit("searchStoryByTitle", response.data);
   },
   async addStory({ commit }, payload) {
-    const data = {description : payload.description, title: payload.title}
+    const data = {description : payload.description, title: payload.title, user: payload.user}
+    console.log("addStory data", data)
     const response = await http.post("/user-story", data, {
       headers: {
         "Content-type": "application/json",

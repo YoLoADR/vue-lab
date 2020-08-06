@@ -57,6 +57,7 @@ export default {
       var payload = {
         title: this.story.title,
         description: this.story.description,
+        user: this.$auth.user,
         token
       };
       this.addStory(payload);
