@@ -67,32 +67,38 @@ export default {
       stories: [],
       currentStory: null,
       currentIndex: -1,
-      title: ""
+      title: "",
+      token: "",
     };
   },
   methods: {
     ...mapActions(["fetchStories", "findByTitle", "deleteStories"]),
-
-    refreshList() {
-      this.fetchStories();
+    async getToken() {
+      return await this.$auth.getTokenSilently();
+    },
+    async setStories(){
+      this.token = await this.getToken();
+      this.fetchStories(this.token);
+    },
+    async refreshList() {
+      this.fetchStories(this.token);
       this.currentStory = null;
       this.currentIndex = -1;
     },
 
     setActiveStory(story, index) {
-      console.log("story",story)
       this.currentStory = story;
       this.currentIndex = index;
     },
 
-    removeAllStories() {
-      this.deleteStories();
+    async removeAllStories() {
+      this.deleteStories(this.token);
       this.refreshList();
     },
   },
   computed: mapGetters(["allStories"]),
   created() {
-    this.fetchStories();
+    this.setStories();
   }
 };
 </script>
